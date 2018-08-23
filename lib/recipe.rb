@@ -1,5 +1,6 @@
 require "recipe/version"
+require "recipe/cli"
 
 module Recipe
-  # Your code goes here...
+  CLI::new().start
 end
