@@ -1,6 +1,6 @@
 class CLI
   def start
-    list_recipes
+    menu
   end
 
   def list_recipes
@@ -8,10 +8,10 @@ class CLI
     puts "1. The Original Zero Carb Pizza Crust"
     puts "2. Keto Butter Chicken"
     puts "Enter the recipe's number, type 'list' to show the recipe list, or type 'exit':"
-    get_selection
   end
 
-  def get_selection
+  def menu
+    list_recipes
     input = nil
     while input != "exit"
       input = gets.chomp.downcase
