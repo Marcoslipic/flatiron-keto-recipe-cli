@@ -1,25 +1,6 @@
-require_relative "./concerns/menu"
-
-class KetoRecipe
-  extend Menu
-
-  attr_accessor :name, :url, :calories, :ingredients, :instructions
-  @@all = []
+class KetoRecipe < Keto
+  attr_accessor :calories, :ingredients, :instructions
   @@type = "recipe"
-
-  def initialize(name, url)
-    @name = name
-    @url = url
-    self.class.all << self
-  end
-
-  def self.all
-    @@all
-  end
-
-  def self.type
-    @@type
-  end
   
   def self.print_all
     self.all.each_with_index do |recipe, index|
@@ -29,7 +10,7 @@ class KetoRecipe
 
   def self.start
     recipe_index = self.menu
-    recipe = KetoRecipe.all[recipe_index]
+    recipe = self.all[recipe_index]
     recipe.print
   end
 
