@@ -26,19 +26,6 @@ class KetoRecipe
     puts "Here are all the #{category.name.downcase} recipes:"
     recipe_index = Menu.display(self.type, category.recipes)
     recipe = category.recipes[recipe_index]
-  end    
-
-  def print
-    self.get_recipe
-    puts "\n#{self.name} (#{self.category.name})"
-    puts "\nIngredients:"
-    self.ingredients.each do |ingredient|
-      puts clean_ingredient(ingredient)
-    end
-    puts "\nInstructions:"
-    self.instructions.each_with_index do |instruction, index|
-      puts "#{index + 1}. #{instruction}"
-    end
   end
 
   def self.scrape_all_recipes(category)
@@ -53,7 +40,20 @@ class KetoRecipe
     end
   end
 
-  def get_recipe
+  def print
+    self.get_complete_recipe
+    puts "\n#{self.name} (#{self.category.name})"
+    puts "\nIngredients:"
+    self.ingredients.each do |ingredient|
+      puts clean_ingredient(ingredient)
+    end
+    puts "\nInstructions:"
+    self.instructions.each_with_index do |instruction, index|
+      puts "#{index + 1}. #{instruction}"
+    end
+  end
+
+  def get_complete_recipe
     doc = Nokogiri::HTML(open(self.url))
     ingredients_data = doc.css("li.wprm-recipe-ingredient")
     ingredients_data.each do |ingredient|
