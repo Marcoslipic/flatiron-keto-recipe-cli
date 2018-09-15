@@ -1,14 +1,9 @@
 class KetoRecipe < Keto
   attr_accessor :calories, :ingredients, :instructions
   @@type = "recipe"
-  
-  def self.print_all
-    self.all.each_with_index do |recipe, index|
-      puts "#{index + 1}. #{recipe.name}"
-    end
-  end
 
-  def self.start
+  def self.start(category_url)
+    self.scrape_keto_connect_category(category_url)
     recipe_index = self.menu
     recipe = self.all[recipe_index]
     recipe.print
@@ -32,6 +27,6 @@ class KetoRecipe < Keto
 
   def scrape_keto_connect_recipe
     doc = Nokogiri::HTML(open(self.url))
-    # binding.pry
+    binding.pry
   end
 end

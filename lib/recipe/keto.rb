@@ -20,4 +20,10 @@ class Keto
   def self.type
     @@type
   end
+
+  def self.print_all
+    self.all.each_with_index do |item, index|
+      puts "#{index + 1}. #{item.name}"
+    end
+  end
 end
