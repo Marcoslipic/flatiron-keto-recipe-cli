@@ -1,8 +1,4 @@
-require_relative "./concerns/menu"
-
 class KetoRecipe
-  extend Menu
-
   @@all = []
   @@type = "recipe"
 
@@ -26,8 +22,9 @@ class KetoRecipe
   end
 
   def self.get_recipe(category)
+    self.scrape_all_recipes(category)
     puts "Here are all the #{category.name.downcase} recipes:"
-    recipe_index = self.menu("recipe", category.recipes)
+    recipe_index = Menu.display(self.type, category.recipes)
     recipe = category.recipes[recipe_index]
   end    
 
@@ -41,6 +38,18 @@ class KetoRecipe
     puts "\nInstructions:"
     self.instructions.each_with_index do |instruction, index|
       puts "#{index + 1}. #{instruction}"
+    end
+  end
+
+  def self.scrape_all_recipes(category)
+    doc = Nokogiri::HTML(open(category.url))
+    posts = doc.css("div.tve_post")
+
+    posts.each do |post|
+      name = post.css("span.tve-post-grid-title a").text
+      url = post.css("a").attr("href").value
+      recipe = self.new(name, url, category)
+      category.add_recipe(recipe)
     end
   end
 
@@ -70,4 +79,5 @@ class KetoRecipe
     end
     ingredient.strip
   end
+
 end

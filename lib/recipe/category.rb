@@ -1,8 +1,4 @@
-require_relative "./concerns/menu"
-
 class Category
-  extend Menu
-
   @@all = []
   @@type = "category"
 
@@ -25,8 +21,7 @@ class Category
 
   def self.get_category
     self.scrape_all_categories
-    self.scrape_all_recipes
-    category_index = self.menu("category", self.all)
+    category_index = Menu.display(self.type, self.all)
     category = self.all[category_index]
   end
 
@@ -47,19 +42,5 @@ class Category
 
   def add_recipe(recipe)
     self.recipes << recipe
-  end
-
-  def self.scrape_all_recipes
-    self.all.each do |category|
-      doc = Nokogiri::HTML(open(category.url))
-      posts = doc.css("div.tve_post")
-
-      posts.each do |post|
-        name = post.css("span.tve-post-grid-title a").text
-        url = post.css("a").attr("href").value
-        recipe = KetoRecipe.new(name, url, category)
-        category.add_recipe(recipe)
-      end
-    end
   end
 end
