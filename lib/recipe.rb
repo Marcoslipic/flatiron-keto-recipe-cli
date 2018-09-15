@@ -1,8 +1,9 @@
 require "recipe/version"
-require "recipe/cli"
 require "recipe/recipe"
 require "recipe/category"
 
 module Recipe
-  CLI::new().start
+  category = Category.get_category
+  recipe = KetoRecipe.get_recipe(category)
+  recipe.print
 end
