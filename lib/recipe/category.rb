@@ -5,9 +5,14 @@ class Category
   @@type = "category"
 
   extend Utility::ClassMethods
-  include Utility::InstanceMethods
 
   attr_accessor :name, :url
+
+  def initialize(name, url)
+    @name = name
+    @url = url
+    self.class.all << self
+  end
 
   def self.all
     @@all

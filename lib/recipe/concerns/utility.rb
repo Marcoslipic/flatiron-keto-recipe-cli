@@ -13,7 +13,7 @@ module Utility
       input = nil
       while input != "exit"
         input = gets.chomp.downcase
-        if input.to_i > 0
+        if input.to_i > 0 && input.to_i < self.all.length + 1
           index = input.to_i - 1
           return index
         elsif input == "list"
@@ -25,14 +25,6 @@ module Utility
           puts "Sorry, I didn't understand that.  #{input_prompt}" 
         end
       end
-    end
-  end
-
-  module InstanceMethods
-    def initialize(name, url)
-      @name = name
-      @url = url
-      self.class.all << self
     end
   end
 end

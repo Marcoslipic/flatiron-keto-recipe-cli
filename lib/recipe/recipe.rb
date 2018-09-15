@@ -2,12 +2,19 @@ require_relative "./concerns/utility"
 
 class KetoRecipe
   extend Utility::ClassMethods
-  include Utility::InstanceMethods
 
   @@all = []
   @@type = "recipe"
 
-  attr_accessor :name, :url, :calories, :ingredients, :instructions
+  attr_accessor :name, :url, :ingredients, :instructions
+
+  def initialize(name, url)
+    @name = name
+    @url = url
+    @ingredients = []
+    @instructions = []
+    self.class.all << self
+  end
 
   def self.all
     @@all
@@ -25,8 +32,16 @@ class KetoRecipe
   end
 
   def print
-    puts "#{self.name}"
     self.scrape_keto_connect_recipe
+    puts "\n#{self.name}"
+    puts "\nIngredients:"
+    self.ingredients.each do |ingredient|
+      puts clean_ingredient(ingredient)
+    end
+    puts "\nInstructions:"
+    self.instructions.each_with_index do |instruction, index|
+      puts "#{index + 1}. #{instruction}"
+    end
   end
 
   def self.scrape_keto_connect_category(url)
@@ -42,6 +57,28 @@ class KetoRecipe
 
   def scrape_keto_connect_recipe
     doc = Nokogiri::HTML(open(self.url))
-    binding.pry
+    ingredients_data = doc.css("li.wprm-recipe-ingredient")
+    ingredients_data.each do |ingredient|
+      amount = ingredient.css("span.wprm-recipe-ingredient-amount").text
+      unit = ingredient.css("span.wprm-recipe-ingredient-unit").text
+      name = ingredient.css("span.wprm-recipe-ingredient-name").text
+      notes = ingredient.css("span.wprm-recipe-ingredient-notes")
+      if notes
+        notes = "#{notes.text}"
+      end
+      self.ingredients.push("#{amount} #{unit} #{name} #{notes}")
+    end
+
+    instructions_data = doc.css("li.wprm-recipe-instruction")
+    instructions_data.each do |instruction|
+      self.instructions.push(instruction.text)
+    end
+  end
+
+  def clean_ingredient(ingredient)
+    while ingredient.match(/\s\s/)
+      ingredient.gsub!(/\s\s/, " ")
+    end
+    ingredient.strip
   end
 end
