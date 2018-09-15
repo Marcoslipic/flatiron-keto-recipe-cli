@@ -53,6 +53,7 @@ class KetoRecipe
       name = post.css("span.tve-post-grid-title a").text
       url = post.css("a").attr("href").value
       self.new(name, url, category)
+      category.add_recipe(self)
     end
   end
 
