@@ -1,10 +1,10 @@
 require_relative "./concerns/menu"
 
 class Category
+  extend Menu
+
   @@all = []
   @@type = "category"
-
-  extend Menu
 
   attr_accessor :name, :url
 
@@ -23,12 +23,12 @@ class Category
   end
 
   def self.get_category
-    self.scrape_all_categories
+    self.get_all_categories
     category_index = self.menu
     category = self.all[category_index]
   end
 
-  def self.scrape_all_categories
+  def self.get_all_categories
     main_url = "https://www.ketoconnect.net/recipes/"
     doc = Nokogiri::HTML(open(main_url))
     rows = doc.css("div.tcb-flex-row") # get the rows that contain the categories
