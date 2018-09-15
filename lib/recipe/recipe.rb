@@ -27,10 +27,9 @@ class KetoRecipe
 
   def self.get_recipe(category)
     puts "Here are all the #{category.name.downcase} recipes:"
-    self.get_all_recipes(category)
-    recipe_index = self.menu
-    recipe = self.all[recipe_index]
-  end
+    recipe_index = self.menu("recipe", category.recipes)
+    recipe = category.recipes[recipe_index]
+  end    
 
   def print
     self.get_recipe
@@ -42,18 +41,6 @@ class KetoRecipe
     puts "\nInstructions:"
     self.instructions.each_with_index do |instruction, index|
       puts "#{index + 1}. #{instruction}"
-    end
-  end
-
-  def self.get_all_recipes(category)
-    doc = Nokogiri::HTML(open(category.url))
-    posts = doc.css("div.tve_post")
-
-    posts.each do |post|
-      name = post.css("span.tve-post-grid-title a").text
-      url = post.css("a").attr("href").value
-      self.new(name, url, category)
-      category.add_recipe(self)
     end
   end
 

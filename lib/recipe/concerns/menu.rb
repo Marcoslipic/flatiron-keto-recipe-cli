@@ -1,18 +1,18 @@
 module Menu
-  def print_all
-    self.all.each_with_index do |item, index|
+  def print_all(list)
+    list.each_with_index do |item, index|
       puts "#{index + 1}. #{item.name}"
     end
   end
 
-  def menu
-    self.print_all
-    input_prompt = "Enter the #{self.type}'s number, type 'list' to show the #{self.type} list, or type 'exit':"
+  def menu(type, list)
+    self.print_all(list)
+    input_prompt = "Enter the #{type}'s number, type 'list' to show the #{type} list, or type 'exit':"
     puts input_prompt
     input = nil
     while input != "exit"
       input = gets.chomp.downcase
-      if input.to_i > 0 && input.to_i < self.all.length + 1
+      if input.to_i > 0 && input.to_i < list.length + 1
         index = input.to_i - 1
         return index
       elsif input == "list"

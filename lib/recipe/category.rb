@@ -24,12 +24,13 @@ class Category
   end
 
   def self.get_category
-    self.get_all_categories
-    category_index = self.menu
+    self.scrape_all_categories
+    self.scrape_all_recipes
+    category_index = self.menu("category", self.all)
     category = self.all[category_index]
   end
 
-  def self.get_all_categories
+  def self.scrape_all_categories
     main_url = "https://www.ketoconnect.net/recipes/"
     doc = Nokogiri::HTML(open(main_url))
     rows = doc.css("div.tcb-flex-row") # get the rows that contain the categories
@@ -46,5 +47,19 @@ class Category
 
   def add_recipe(recipe)
     self.recipes << recipe
+  end
+
+  def self.scrape_all_recipes
+    self.all.each do |category|
+      doc = Nokogiri::HTML(open(category.url))
+      posts = doc.css("div.tve_post")
+
+      posts.each do |post|
+        name = post.css("span.tve-post-grid-title a").text
+        url = post.css("a").attr("href").value
+        recipe = KetoRecipe.new(name, url, category)
+        category.add_recipe(recipe)
+      end
+    end
   end
 end
