@@ -1,10 +1,10 @@
-require_relative "./concerns/utility"
+require_relative "./concerns/menu"
 
 class Category
   @@all = []
   @@type = "category"
 
-  extend Utility::ClassMethods
+  extend Menu
 
   attr_accessor :name, :url
 
@@ -22,12 +22,10 @@ class Category
     @@type
   end
 
-  def self.start
+  def self.get_category
     self.scrape_all_categories
     category_index = self.menu
     category = self.all[category_index]
-    puts "Here are all the #{category.name.downcase} recipes:"
-    KetoRecipe.start(category.url)
   end
 
   def self.scrape_all_categories

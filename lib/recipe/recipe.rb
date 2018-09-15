@@ -1,7 +1,7 @@
-require_relative "./concerns/utility"
+require_relative "./concerns/menu"
 
 class KetoRecipe
-  extend Utility::ClassMethods
+  extend Menu
 
   @@all = []
   @@type = "recipe"
@@ -24,15 +24,15 @@ class KetoRecipe
     @@type
   end
 
-  def self.start(category_url)
-    self.scrape_keto_connect_category(category_url)
+  def self.get_recipe(category)
+    puts "Here are all the #{category.name.downcase} recipes:"
+    self.get_all_recipes(category.url)
     recipe_index = self.menu
     recipe = self.all[recipe_index]
-    recipe.print
   end
 
   def print
-    self.scrape_keto_connect_recipe
+    self.get_recipe
     puts "\n#{self.name}"
     puts "\nIngredients:"
     self.ingredients.each do |ingredient|
@@ -44,7 +44,7 @@ class KetoRecipe
     end
   end
 
-  def self.scrape_keto_connect_category(url)
+  def self.get_all_recipes(url)
     doc = Nokogiri::HTML(open(url))
     posts = doc.css("div.tve_post")
 
@@ -55,7 +55,7 @@ class KetoRecipe
     end
   end
 
-  def scrape_keto_connect_recipe
+  def get_recipe
     doc = Nokogiri::HTML(open(self.url))
     ingredients_data = doc.css("li.wprm-recipe-ingredient")
     ingredients_data.each do |ingredient|
