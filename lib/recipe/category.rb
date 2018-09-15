@@ -6,11 +6,12 @@ class Category
   @@all = []
   @@type = "category"
 
-  attr_accessor :name, :url
+  attr_accessor :name, :url, :recipes
 
   def initialize(name, url)
     @name = name
     @url = url
+    @recipes = []
     self.class.all << self
   end
 
@@ -41,5 +42,9 @@ class Category
       url = row.css("a").attr("href").value
       self.new(name, url)
     end
+  end
+
+  def add_recipe(recipe)
+    self.recipes << recipe
   end
 end

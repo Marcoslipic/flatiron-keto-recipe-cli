@@ -6,11 +6,12 @@ class KetoRecipe
   @@all = []
   @@type = "recipe"
 
-  attr_accessor :name, :url, :ingredients, :instructions
+  attr_accessor :name, :url, :category, :ingredients, :instructions
 
-  def initialize(name, url)
+  def initialize(name, url, category)
     @name = name
     @url = url
+    @category = category
     @ingredients = []
     @instructions = []
     self.class.all << self
@@ -26,14 +27,14 @@ class KetoRecipe
 
   def self.get_recipe(category)
     puts "Here are all the #{category.name.downcase} recipes:"
-    self.get_all_recipes(category.url)
+    self.get_all_recipes(category)
     recipe_index = self.menu
     recipe = self.all[recipe_index]
   end
 
   def print
     self.get_recipe
-    puts "\n#{self.name}"
+    puts "\n#{self.name} (#{self.category.name})"
     puts "\nIngredients:"
     self.ingredients.each do |ingredient|
       puts clean_ingredient(ingredient)
@@ -44,14 +45,14 @@ class KetoRecipe
     end
   end
 
-  def self.get_all_recipes(url)
-    doc = Nokogiri::HTML(open(url))
+  def self.get_all_recipes(category)
+    doc = Nokogiri::HTML(open(category.url))
     posts = doc.css("div.tve_post")
 
     posts.each do |post|
       name = post.css("span.tve-post-grid-title a").text
       url = post.css("a").attr("href").value
-      self.new(name, url)
+      self.new(name, url, category)
     end
   end
 
