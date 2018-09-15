@@ -1,5 +1,21 @@
-class Category < Keto
+require_relative "./concerns/utility"
+
+class Category
+  @@all = []
   @@type = "category"
+
+  extend Utility::ClassMethods
+  include Utility::InstanceMethods
+
+  attr_accessor :name, :url
+
+  def self.all
+    @@all
+  end
+
+  def self.type
+    @@type
+  end
 
   def self.start
     self.scrape_all_categories

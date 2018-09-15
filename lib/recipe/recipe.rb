@@ -1,6 +1,21 @@
-class KetoRecipe < Keto
-  attr_accessor :calories, :ingredients, :instructions
+require_relative "./concerns/utility"
+
+class KetoRecipe
+  extend Utility::ClassMethods
+  include Utility::InstanceMethods
+
+  @@all = []
   @@type = "recipe"
+
+  attr_accessor :name, :url, :calories, :ingredients, :instructions
+
+  def self.all
+    @@all
+  end
+
+  def self.type
+    @@type
+  end
 
   def self.start(category_url)
     self.scrape_keto_connect_category(category_url)
